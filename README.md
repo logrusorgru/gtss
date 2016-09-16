@@ -1,2 +1,7 @@
-# gtss
-golang TCP server skeleton
+gtss
+====
+
+
+Golang TCP server skeleton
+
+
