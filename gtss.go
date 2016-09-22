@@ -478,7 +478,7 @@ func (s *Server) Serve(l net.Listener) (err error) {
 		debugf("(*Server).Serve accept connection")
 		go s.serve(conn, rbs, wbs)
 	}
-	return
+	//return
 }
 
 func (s *Server) serve(conn net.Conn, rbs, wbs int) {

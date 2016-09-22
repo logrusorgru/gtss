@@ -5,7 +5,7 @@ import (
 	"os/signal"
 )
 
-func Example_Grace() {
+func ExampleGrace() {
 	var s *Server
 
 	// initialize server

@@ -329,10 +329,10 @@ Try:
 	defer ln.Close()
 	reply, err := recv(ln.Addr().String(), len(data))
 	if err != nil {
-		t.Fatal("client receiving error: %v", err)
+		t.Fatalf("client receiving error: %v", err)
 	}
 	if string(reply) != string(data) {
-		t.Error("wrong msg from server: expected %q, got %q", string(data),
+		t.Errorf("wrong msg from server: expected %q, got %q", string(data),
 			string(reply))
 	}
 }
@@ -374,10 +374,10 @@ Try:
 	defer ln.Close()
 	reply, err := recv(ln.Addr().String(), len(data))
 	if err != nil {
-		t.Fatal("client receiving error: %v", err)
+		t.Fatalf("client receiving error: %v", err)
 	}
 	if string(reply) != string(data) {
-		t.Error("wrong msg from server: expected %q, got %q", string(data),
+		t.Errorf("wrong msg from server: expected %q, got %q", string(data),
 			string(reply))
 	}
 }
@@ -436,10 +436,10 @@ Try:
 	defer ln.Close()
 	reply, err := recv(ln.Addr().String(), len(data))
 	if err != nil {
-		t.Fatal("client receiving error: %v", err)
+		t.Fatalf("client receiving error: %v", err)
 	}
 	if string(reply) != string(data) {
-		t.Error("wrong msg from server: expected %q, got %q", string(data),
+		t.Errorf("wrong msg from server: expected %q, got %q", string(data),
 			string(reply))
 	}
 }
@@ -524,7 +524,7 @@ Try:
 	g.Close()
 	<-g.Done()
 	if g.Err() != nil {
-		t.Error("server closing error: %v", g.Err())
+		t.Errorf("server closing error: %v", g.Err())
 	}
 }
 
@@ -569,7 +569,7 @@ Try:
 	g.Close()
 	<-g.Done()
 	if g.Err() != nil {
-		t.Error("server closing error: %v", g.Err())
+		t.Errorf("server closing error: %v", g.Err())
 	}
 }
 
