@@ -25,7 +25,7 @@
 
 // Package gtss implements golang TCP server with minimal
 // features such as: buffering, workers limitation, etc
-// inclusive gracefull shutdown
+// inclusive graceful shutdown
 package gtss
 
 import (
@@ -63,8 +63,10 @@ const (
 // global service/convience constants
 
 const (
-	No      int = -1 // avoid options
-	Default int = 0  // default value
+	// No avoids an option
+	No int = -1
+	// Default is used for default values
+	Default int = 0
 )
 
 // context is a wrapped connection
@@ -94,8 +96,7 @@ func (c *Context) Write(p []byte) (n int, err error) {
 	return c.out.Write(p)
 }
 
-// Get underlying net.Conn interface. It may be *net.TCPConn
-// or *tls.Conn if TLS is used
+// Connection return undelrying net.Conn
 func (c *Context) Connection() net.Conn {
 	debugf("(*Context).Connection: %v", c.RemoteAddr())
 	return c.Conn
@@ -110,9 +111,9 @@ func (c *Context) Flush() (err error) {
 	return
 }
 
-// Flush write buffer (if buffered) and close connection. If some error
-// occured during flush then this error returns (actually, connection will
-// be closed anyway). Otherwise closing error returns if any
+// Close flushes internal write-buffer (if present) and closes
+// underying connection. You don't need to call this method. It
+// called after last handler automatically
 func (c *Context) Close() (err error) {
 	debugf("(*Context).close: %v", c.RemoteAddr())
 	if bout := c.bout; bout != nil {
@@ -174,6 +175,7 @@ func (c *Context) reset() {
 // between Handlers when connection is alive
 type Handler func(ctx *Context)
 
+// A Server implements TCL/TLS server
 type Server struct {
 	// Net is "tcp", "tcp4" or "tcp6", defaults to "tcp"
 	Net string
@@ -188,13 +190,13 @@ type Server struct {
 	// ReadBufferSize. By default a connection is buffered with
 	// default buffer size. Use No to avoid buffering. Provide any
 	// positive integer value to set particular size. All connections
-	// will have the same buffer size. Feel free to use Defualt for
+	// will have the same buffer size. Feel free to use Default for
 	// readability of your code
 	ReadBufferSize int
 	// WriteBufferSize. By default a connection is buffered with
 	// default buffer size. Use No to avoid buffering. Provide any
 	// positive integer value to set particular size. All connections
-	// will have the same buffer size. Feel free to use Defualt for
+	// will have the same buffer size. Feel free to use Default for
 	// readability of your code.
 	WriteBufferSize int
 	// TLSConfig is optional TLS config, used by ListenAndServeTLS
@@ -289,7 +291,7 @@ func (s *Server) limitWorkes(l net.Listener) (ll net.Listener, err error) {
 		wl = defaultWorkersLimit
 		fallthrough
 	case wl > 0: // > 0
-		ll = netutil.LimitListener(l, s.WorkersLimit)
+		ll = netutil.LimitListener(l, wl) //s.WorkersLimit)
 	case wl == No: // == -1
 		ll = l // do nothing
 	default: // < -1
@@ -516,7 +518,7 @@ func (s *Server) serve(conn net.Conn, rbs, wbs int) {
 // 	}
 // }
 
-// A Grace wraps server to provide gracefull shutdown
+// A Grace wraps server to provide graceful shutdown
 type Grace struct {
 	closed chan struct{}
 	done   chan struct{}
@@ -538,7 +540,7 @@ func (g *Grace) Done() <-chan struct{} {
 	return g.done
 }
 
-// LsiternAndServe in separate gorotine. It panics if 's' is nil
+// ListenAndServe in separate gorotine. It panics if 's' is nil
 func (g *Grace) ListenAndServe(s *Server) {
 	debugf("(*Grace).ListenAndServe")
 	g.done = make(chan struct{})
@@ -551,7 +553,7 @@ func (g *Grace) ListenAndServe(s *Server) {
 	g.Serve(s, l)
 }
 
-// LsiternAndServeTLS in separate gorotine. It panics if 's' is nil
+// ListenAndServeTLS in separate gorotine. It panics if 's' is nil
 func (g *Grace) ListenAndServeTLS(s *Server, certFile, keyFile string) {
 	debugf("(*Grace).ListenAndServeTLS")
 	g.done = make(chan struct{})

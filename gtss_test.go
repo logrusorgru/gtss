@@ -597,7 +597,7 @@ func TestServer_limitWorkers(t *testing.T) {
 		t.Error("unknown hujnya")
 	}
 	s.WorkersLimit = Default
-	l, err = s.limitWorkes(d)
+	_, err = s.limitWorkes(d)
 	if err != nil {
 		t.Error("unexpected error:", err)
 	}
