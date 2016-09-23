@@ -26,3 +26,25 @@ func ExampleGrace() {
 		// handle error
 	}
 }
+
+func ExampleServer() {
+	s := &Server{
+		Net:             "tcp4",
+		Addr:            "127.0.0.1:9000",
+		WorkersLimit:    1000,
+		WriteBufferSize: No,
+		ReadBufferSize:  8192,
+		Handlers: []Handler{
+			func(ctx *Context) {
+				// prepare
+			},
+			func(ctx *Context) {
+				// stuff
+			},
+			func(ctx *Context) {
+				// finialize
+			},
+		},
+	}
+	s.ListenAndServe()
+}
